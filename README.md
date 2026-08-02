@@ -73,9 +73,8 @@ uv run agfb-bench aggregate --shard-dir runs/awgn --out runs/awgn/aggregate.parq
 
 ## Reproducing the paper's results
 
-`reproduce_paper_claims.ipynb` is a reviewer's cross-check. Every headline number
-in the paper is a reduction of the raw per-image measurements stored under
-`runs/`. The notebook reloads those Parquet files, recomputes each number from
+`reproduce_paper_claims.ipynb` is a quick way to reproduce figures and results from our paper.
+The notebook reloads our Parquet files, recomputes each number from
 scratch with the same scoring protocol, and places the recomputed value next to
 the value printed in the paper. It reads only the result files, writes nothing,
 and needs no GPU.
@@ -86,8 +85,7 @@ uv run jupyter lab reproduce_paper_claims.ipynb   # or: Run All
 ```
 
 Each section ends in a verdict table with `paper`, `recomputed`, `abs_diff`, and
-`match` columns. Tolerances follow the precision the paper prints, so a `FAIL` row
-is a genuine disagreement, not a rounding artifact.
+`match` columns. Tolerances follow the precision the paper prints.
 
 ## Repository layout
 
