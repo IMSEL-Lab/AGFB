@@ -5,7 +5,6 @@ description = "Fast batched noise models for Analytic Gradient Filter Benchmark 
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
-authors = [{ name = "J.C. Vaught" }]
 requires-python = ">=3.11"
 
 dependencies = [

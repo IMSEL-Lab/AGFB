@@ -7,8 +7,6 @@ truth). The four AGFB component packages (`agfb-generators`, `agfb-noise`,
 checkout via `sys.path` injection, not pip-installed; set `AGFB_WORKSPACE` to the
 folder holding the four component directories if it is not found automatically.
 
-Author: J.C. Vaught (`jvaught@sc.edu`).
-
 ## What it does
 
 A run renders a clean field (Chapter 1), injects a noise condition (Chapter 2),

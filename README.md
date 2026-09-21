@@ -14,11 +14,6 @@ in the accompanying paper on the Circular Polynomial Gradient Filter (CPGF). A
 companion notebook recomputes each headline number from those raw measurements so
 the results can be checked independently.
 
-The canonical public repository is [IMSEL-Lab/AGFB](https://github.com/IMSEL-Lab/AGFB).
-The release is authored by J.C. Vaught and is intended to make the benchmark
-implementation, stored measurements, and reviewer checks portable across clean
-checkouts.
-
 ## What is in the repository
 
 The project is a `uv` workspace of five installable packages plus the result data
@@ -144,6 +139,7 @@ files stored here contain benchmark measurements rather than the source images.
 
 Released under the MIT License. See [`LICENSE`](LICENSE) for the full text.
 
-## Author
+## Referencing AGFB
 
-J.C. Vaught (`jvaught@sc.edu`).
+Use a tagged release when available. Otherwise, record the repository URL and
+full commit SHA so the exact benchmark version can be recovered.

@@ -2,7 +2,6 @@
 name = "agfb-metrics"
 version = "0.0.1"
 description = "Batched, GPU-accelerated benchmark metrics for the Analytical Gradient Filter Benchmark (AGFB) suite"
-authors = [{ name = "J.C. Vaught" }]
 requires-python = ">=3.11"
 
 dependencies = [

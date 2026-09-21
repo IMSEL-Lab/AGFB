@@ -2,7 +2,7 @@
 
 This document describes the smallest checks that validate a clean AGFB checkout
 and the commands used to regenerate the stored benchmark measurements and
-derived tables. The public release is maintained by J.C. Vaught.
+derived tables.
 
 ## Environment
 

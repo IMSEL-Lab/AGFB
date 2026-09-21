@@ -196,6 +196,3 @@ Exact mode is appropriate for final reported tables. Histogram mode is useful
 for large sweeps over filters, seeds, and parameter grids. A common workflow is
 to run sweeps with histogram tails, select the cases of interest, and recompute
 the selected results with exact tails.
-
-
-Author: J.C. Vaught.
