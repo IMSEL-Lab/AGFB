@@ -10,14 +10,17 @@ truth in raw mode. Emits the CeTZ scatter CSV (native ODS vs supersampled ODS).
 """
 
 import glob
+from pathlib import Path
 
 import polars as pl
 
-OUT_CSV = "../PGF_paper/figures/cetz_src/main/fig_sec07_ss8_ods.csv"
+ROOT = Path(__file__).resolve().parents[2]
+OUT_CSV = ROOT / "runs" / "_analysis" / "generated" / "figures" / "fig_sec07_ss8_ods.csv"
+OUT_CSV.parent.mkdir(parents=True, exist_ok=True)
 
 
 def best_raw_ods(study_glob):
-    fs = sorted(glob.glob(study_glob))
+    fs = sorted(glob.glob(str(ROOT / study_glob)))
     df = pl.concat([pl.read_parquet(f) for f in fs], how="diagonal")
     df = df.filter(
         (pl.col("dataset") == "bsds500") & (pl.col("mode") == "raw") & (pl.col("metric") == "ods")

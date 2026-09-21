@@ -4,10 +4,11 @@ Emits display-ready CSVs (numbers pre-formatted as strings) for the appendix
 tables. Each CSV's first row is the header, matching the `csvbooktabs` Typst
 helper. Reductions follow the AGFB protocol used in analyze.py: per-image metric
 values are averaged over cells and seeds, except noise_gain, which uses the
-outlier-robust median. Output lands in ../PGF_paper/figures/tables relative to
-the AGFB working directory.
+outlier-robust median. Output lands in ``runs/_analysis/generated`` relative to
+the repository root.
 """
 
+import argparse
 import glob
 import re
 from collections import Counter
@@ -17,14 +18,23 @@ import polars as pl
 from agfb_bench.filters import build_filter_configs
 from synthetic_dedup import deduplicate_synthetic_results
 
-OUT = Path("../PGF_paper/figures/tables")
+ROOT = Path(__file__).resolve().parents[2]
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument(
+    "--output-dir",
+    type=Path,
+    default=ROOT / "runs" / "_analysis" / "generated",
+    help="directory for derived CSV tables and figure data",
+)
+ARGS = parser.parse_args()
+OUT = ARGS.output_dir / "tables"
 OUT.mkdir(parents=True, exist_ok=True)
-MAIN_FIG = Path("../PGF_paper/figures/cetz_src/main")
+MAIN_FIG = ARGS.output_dir / "figures"
 MAIN_FIG.mkdir(parents=True, exist_ok=True)
 
 
 def load(subdir: str) -> pl.DataFrame:
-    fs = sorted(glob.glob(f"runs/{subdir}/*.parquet"))
+    fs = sorted(glob.glob(str(ROOT / "runs" / subdir / "*.parquet")))
     return deduplicate_synthetic_results(
         pl.concat([pl.read_parquet(f) for f in fs], how="diagonal")
     )
@@ -409,7 +419,7 @@ emit(
 )
 
 # ===== backend_timing: backend x radius matrix (4096, degree 1) =============
-E = pl.read_parquet("runs/timing/backend_timing/backend_timing_sweep.parquet")
+E = pl.read_parquet(ROOT / "runs" / "timing" / "backend_timing" / "backend_timing_sweep.parquet")
 e = E.filter(
     (pl.col("filter_family") == "cpgf")
     & (pl.col("status") == "ok")
@@ -433,7 +443,9 @@ for r in radii:
 write("appendix_backend_matrix.csv", ["Radius"] + labels_E, rows)
 
 # ===== realimg/edges: per-dataset full rankings =============================
-R = pl.concat([pl.read_parquet(p) for p in glob.glob("runs/realimg/edges/*.parquet")])
+R = pl.concat(
+    [pl.read_parquet(p) for p in glob.glob(str(ROOT / "runs" / "realimg" / "edges" / "*.parquet"))]
+)
 
 
 def real_table(dataset):
@@ -481,7 +493,12 @@ for ds in ["bsds500", "drive", "bbbc039"]:
     )
 
 # ===== realimg/supersampled: native vs supersampled =========================
-Rs = pl.concat([pl.read_parquet(p) for p in glob.glob("runs/realimg/supersampled/*.parquet")])
+Rs = pl.concat(
+    [
+        pl.read_parquet(p)
+        for p in glob.glob(str(ROOT / "runs" / "realimg" / "supersampled" / "*.parquet"))
+    ]
+)
 
 
 def best_ods(df, dataset):

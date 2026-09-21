@@ -7,7 +7,7 @@ All metrics consume the same five inputs:
     flat_mask        : (B, H, W) bool, flat background pixels
 
 `masks(gx_t, gy_t)` constructs both masks from the truth field in one call,
-matching the Section 1.1 protocol used by the existing PGF_paper prototype.
+matching the protocol used by the benchmark specification.
 """
 
 from __future__ import annotations

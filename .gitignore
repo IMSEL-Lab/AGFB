@@ -9,9 +9,18 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 .ty/
+.mypy_cache/
+.coverage
+coverage.xml
 build/
 dist/
 *.egg-info/
+
+# Local benchmark runs and progress files
+runs/smoke/
+runs/awgn/
+runs/B/
+*.progress.json
 
 # Notebooks and OS cruft
 .ipynb_checkpoints/

@@ -32,9 +32,9 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/j-vaught/agfb-generators"
-Repository = "https://github.com/j-vaught/agfb-generators"
-Issues = "https://github.com/j-vaught/agfb-generators/issues"
+Homepage = "https://github.com/IMSEL-Lab/AGFB"
+Repository = "https://github.com/IMSEL-Lab/AGFB"
+Issues = "https://github.com/IMSEL-Lab/AGFB/issues"
 
 [build-system]
 requires = ["hatchling>=1.26"]

@@ -10,7 +10,8 @@ Scalar parameters apply to every pixel. One-dimensional tensor parameters broadc
 
 **Installation**
 
-Install directly from the repository with `python -m pip install git+https://github.com/j-vaught/agfb-noise.git` or `uv add git+https://github.com/j-vaught/agfb-noise.git`.
+Install directly from the public AGFB repository with `uv pip install
+"agfb-noise @ git+https://github.com/IMSEL-Lab/AGFB.git#subdirectory=agfb-noise"`.
 
 PyTorch is the core runtime dependency. The project declares `torch>=2.4,<2.7` and `numpy>=2.0`. On Linux, the included `uv` configuration uses the PyTorch CUDA 12.4 wheel index for `torch`; on macOS and other non-Linux platforms it follows the normal PyTorch package resolution. If your environment needs a different CUDA runtime or a CPU-only PyTorch build, install the appropriate PyTorch wheel first and then install this package into the same environment.
 

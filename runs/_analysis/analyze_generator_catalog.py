@@ -14,7 +14,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 WORKSPACE = HERE.parents[1]  # runs/_analysis -> runs -> AGFB
-OUT = HERE.parents[2] / "PGF_paper" / "figures" / "tables"  # repo-root/PGF_paper/figures/tables
+OUT = HERE.parents[2] / "runs" / "_analysis" / "generated" / "tables"
 OUT.mkdir(parents=True, exist_ok=True)
 sys.path.insert(0, str(WORKSPACE / "agfb-bench"))
 

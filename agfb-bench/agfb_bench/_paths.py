@@ -1,11 +1,10 @@
 """Locate the AGFB workspace and expose its four component packages.
 
 The component packages (`agfb-generators`, `agfb-noise`, `agfb-filters`,
-`agfb-metrics`) are not pip-installed; they are consumed directly from the
-workspace checkout by inserting their directories onto `sys.path`, mirroring
-the workspace's own `all_components_smoke_test.py`. Set the `AGFB_WORKSPACE`
-environment variable to point at the directory holding the four folders if it
-cannot be found by searching upward from the current location.
+`agfb-metrics`) are consumed directly from the workspace checkout by inserting
+their directories onto `sys.path`. Set `AGFB_WORKSPACE` to the directory
+holding the four folders when the checkout cannot be found by searching
+upward from the current location.
 """
 
 from __future__ import annotations
@@ -30,7 +29,6 @@ def _candidates(start: Path):
     for base in (start, *start.parents):
         yield base
         yield base / "AGFB"
-        yield base / "Documents" / "New project" / "AGFB"
 
 
 def find_workspace(start: Path | None = None) -> Path:

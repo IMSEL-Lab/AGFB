@@ -6,11 +6,10 @@ non-empty signal mask. Inputs are gradient tensors, not raw intensity images.
 `NRMSE = sqrt(<|e|^2>_E) / <|grad_true|>_E`
 
 where `e = grad_filter - grad_true`, `E` is the signal (true-gradient signal) mask, and
-both expectations are means over `E`. Note this is the *spec* definition: the
-numerator is RMS, the denominator is the linear mean of true-gradient
-magnitude. (The existing PGF_paper prototype `mini.nrmse_vector` uses a
-sqrt-of-mean-square denominator; that form is preserved in the prototype
-itself for backward compatibility but is *not* what the Section 1.3 spec asks for.)
+both expectations are means over `E`. Note this is the benchmark definition:
+the numerator is RMS, and the denominator is the linear mean of true-gradient
+magnitude. This differs from the older prototype formula that uses a
+sqrt-of-mean-square denominator.
 
 Returns one value per image: shape `(B,)`, float32, NaN if the signal mask
 is empty for that image.
