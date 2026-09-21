@@ -15,13 +15,17 @@ lo, hi, is_optimal) for the NRMSE-vs-SNR crossover family.
 
 import glob
 import re
+from pathlib import Path
 from typing import cast
 
 import polars as pl
 from synthetic_dedup import deduplicate_synthetic_results
 
-OUT_CSV = "../PGF_paper/figures/cetz_src/main/fig_sec06_awgn_snr.csv"
-OUT_FAM_CSV = "../PGF_paper/figures/cetz_src/main/fig_sec06_awgn_family.csv"
+ROOT = Path(__file__).resolve().parents[2]
+OUT_DIR = ROOT / "runs" / "_analysis" / "generated" / "figures"
+OUT_DIR.mkdir(parents=True, exist_ok=True)
+OUT_CSV = OUT_DIR / "fig_sec06_awgn_snr.csv"
+OUT_FAM_CSV = OUT_DIR / "fig_sec06_awgn_family.csv"
 T_975_7 = 2.364624251  # Student-t, 0.975 quantile, 7 dof (8 seeds)
 
 # Coarse family fold for the cross-filter comparison: classical stencils are
@@ -46,7 +50,7 @@ def rd(s):
     return (int(m.group(1)), int(m.group(2))) if m else (None, None)
 
 
-fs = sorted(glob.glob("runs/synthetic/awgn_robustness/*.parquet"))
+fs = sorted(glob.glob(str(ROOT / "runs" / "synthetic" / "awgn_robustness" / "*.parquet")))
 df = deduplicate_synthetic_results(pl.concat([pl.read_parquet(f) for f in fs], how="diagonal"))
 print(f"shards={len(fs)} seeds={sorted(df['seed'].unique().to_list())}")
 

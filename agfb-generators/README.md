@@ -12,10 +12,11 @@ Install the package from a local checkout with `uv`.
 uv sync
 ```
 
-After the repository is published, install it directly from GitHub.
+Install the package from the public AGFB repository with the subdirectory
+specifier below.
 
 ```bash
-uv pip install "agfb-generators @ git+https://github.com/j-vaught/agfb-generators.git"
+uv pip install "agfb-generators @ git+https://github.com/IMSEL-Lab/AGFB.git#subdirectory=agfb-generators"
 ```
 
 **Quickstart**

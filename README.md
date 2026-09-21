@@ -14,6 +14,11 @@ in the accompanying paper on the Circular Polynomial Gradient Filter (CPGF). A
 companion notebook recomputes each headline number from those raw measurements so
 the results can be checked independently.
 
+The canonical public repository is [IMSEL-Lab/AGFB](https://github.com/IMSEL-Lab/AGFB).
+The release is authored by J.C. Vaught and is intended to make the benchmark
+implementation, stored measurements, and reviewer checks portable across clean
+checkouts.
+
 ## What is in the repository
 
 The project is a `uv` workspace of five installable packages plus the result data
@@ -87,6 +92,10 @@ uv run jupyter lab reproduce_paper_claims.ipynb   # or: Run All
 Each section ends in a verdict table with `paper`, `recomputed`, `abs_diff`, and
 `match` columns. Tolerances follow the precision the paper prints.
 
+The checked-in notebooks contain source cells only. Running a notebook recreates
+its outputs locally, which keeps generated displays and machine-specific metadata
+out of the release.
+
 ## Repository layout
 
 ```
@@ -117,6 +126,19 @@ from them.
 | Real-image table | `runs/realimg/edges/` and `runs/_analysis/analyze_appendix.py` | 182 successful runs, reported as 136 nonredundant rows. |
 | Supersampling figure and tables | `runs/realimg/supersampled/` and `runs/_analysis/analyze_appendix.py` | 174 successful runs, reported as 128 nonredundant matched rows. |
 | Supplement tables | `runs/_analysis/analyze_appendix.py` and `runs/_analysis/analyze_awgn_appendix.py` | Display-ready CSV tables are generated without manual transcription. |
+
+## Reproducibility and data rights
+
+The reproducibility workflow is documented in [`REPRODUCIBILITY.md`](REPRODUCIBILITY.md).
+It describes the smoke checks, the production studies, the analysis scripts, and
+the external real-image inputs required for the edge studies.
+
+The source code, benchmark configuration, analysis scripts, notebooks, and stored
+measurements in this repository are released under the MIT License. The repository
+does not redistribute BSDS500, DRIVE, or BBBC039 image files or annotations. Users
+must obtain those datasets from their respective providers and follow their
+licenses and access conditions before running the real-image studies. The Parquet
+files stored here contain benchmark measurements rather than the source images.
 
 ## License
 

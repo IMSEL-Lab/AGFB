@@ -15,6 +15,11 @@ dependencies = [
     "pillow>=12.2.0",
 ]
 
+[project.urls]
+Homepage = "https://github.com/IMSEL-Lab/AGFB"
+Repository = "https://github.com/IMSEL-Lab/AGFB"
+Issues = "https://github.com/IMSEL-Lab/AGFB/issues"
+
 [tool.uv.sources]
 agfb-filters = { path = "agfb-filters", editable = true }
 agfb-generators = { path = "agfb-generators", editable = true }
@@ -44,6 +49,15 @@ select = ["E", "F", "I", "B", "UP", "SIM"]
 
 [tool.ty.environment]
 extra-paths = [
+    "agfb-filters",
+    "agfb-generators",
+    "agfb-metrics",
+    "agfb-noise",
+    "agfb-bench",
+]
+
+[tool.pytest.ini_options]
+pythonpath = [
     "agfb-filters",
     "agfb-generators",
     "agfb-metrics",

@@ -13,13 +13,17 @@ backends, plus an image-size scaling summary for the prose.
 """
 
 import re
+from pathlib import Path
 
 import polars as pl
 
-OUT_CSV = "../PGF_paper/figures/cetz_src/main/fig_sec06_backend.csv"
+ROOT = Path(__file__).resolve().parents[2]
+OUT_DIR = ROOT / "runs" / "_analysis" / "generated" / "figures"
+OUT_DIR.mkdir(parents=True, exist_ok=True)
+OUT_CSV = OUT_DIR / "fig_sec06_backend.csv"
 PATHS = ["FFT", "SPATIAL_DENSE", "SPARSE_OFFSETS"]
 
-d = pl.read_parquet("runs/timing/backend_timing/backend_timing_sweep.parquet")
+d = pl.read_parquet(ROOT / "runs" / "timing" / "backend_timing" / "backend_timing_sweep.parquet")
 cp = d.filter(
     (pl.col("filter_family") == "cpgf")
     & (pl.col("status") == "ok")

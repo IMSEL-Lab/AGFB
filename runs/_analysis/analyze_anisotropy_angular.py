@@ -21,13 +21,14 @@ from pathlib import Path
 import torch
 from agfb_filters.filters.polynomial import build_polynomial_gradient_kernels
 
-# Output lands next to the other Sec. 5 figure CSVs in the paper repo.
+# Output stays inside this repository so the analysis has no neighboring-repo
+# dependency.
 OUT_CSV = (
-    Path(__file__).resolve().parents[2].parent
-    / "PGF_paper"
+    Path(__file__).resolve().parents[2]
+    / "runs"
+    / "_analysis"
+    / "generated"
     / "figures"
-    / "cetz_src"
-    / "main"
     / "fig_sec05_anisotropy_angular.csv"
 )
 

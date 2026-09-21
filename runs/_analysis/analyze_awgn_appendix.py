@@ -7,9 +7,10 @@ analyze_appendix.py: per-image NRMSE and angular MAE are averaged over cells and
 seeds, while noise gain uses the outlier-robust median. The confidence table
 instead computes the per-seed cell-mean and a Student-t 95% interval across the
 eight seeds, to quantify how tight the radius ordering is. Output lands in
-../PGF_paper/figures/tables relative to the AGFB working directory.
+``runs/_analysis/generated/tables`` relative to the repository root.
 """
 
+import argparse
 import glob
 import re
 from collections import Counter
@@ -19,7 +20,15 @@ from typing import cast
 import polars as pl
 from synthetic_dedup import deduplicate_synthetic_results
 
-OUT = Path("../PGF_paper/figures/tables")
+ROOT = Path(__file__).resolve().parents[2]
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument(
+    "--output-dir",
+    type=Path,
+    default=ROOT / "runs" / "_analysis" / "generated" / "tables",
+    help="directory for derived CSV tables",
+)
+OUT = parser.parse_args().output_dir
 OUT.mkdir(parents=True, exist_ok=True)
 T_975_7 = 2.364624251  # Student-t, 0.975 quantile, 7 dof (8 seeds)
 
@@ -154,7 +163,7 @@ def rd(s: str) -> tuple[int | None, int | None]:
 
 
 # ----- load -----------------------------------------------------------------
-fs = sorted(glob.glob("runs/synthetic/awgn_robustness/*.parquet"))
+fs = sorted(glob.glob(str(ROOT / "runs" / "synthetic" / "awgn_robustness" / "*.parquet")))
 df = deduplicate_synthetic_results(pl.concat([pl.read_parquet(f) for f in fs], how="diagonal"))
 SNRS = sorted(df["snr_db"].unique().to_list())
 print(
