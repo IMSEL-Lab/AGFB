@@ -8,11 +8,12 @@ every pixel, accuracy is measured directly rather than against a finite-differen
 approximation. The suite also includes a real-image edge-detection study scored
 against human boundary annotations.
 
-This repository is the workspace that ties the AGFB component packages together,
-runs the benchmark, and stores the raw measurements behind every figure and table
-in the accompanying paper on the Circular Polynomial Gradient Filter (CPGF). A
-companion notebook recomputes each headline number from those raw measurements so
-the results can be checked independently.
+This repository ties the AGFB component packages together, runs the public
+benchmark, and stores the raw measurements behind the accompanying paper. The
+stored measurements include the CPGF study results, but the CPGF implementation
+itself is intentionally excluded from this public code release. A companion
+notebook recomputes each headline number from the stored measurements so the
+results can be checked independently.
 
 ## What is in the repository
 
@@ -38,9 +39,12 @@ Seeds are the shard axis: one shard is one `(study, seed)` pair.
 | clean accuracy | full catalog (559) | clean only | full (110) | 1 |
 | AWGN robustness | full catalog (559) | 12 dB levels | full (110) | 8 |
 | noise breadth | canonical (24) | 79 native conditions | core (29) | 8 |
-| CPGF grid | canonical (24) | 79 native conditions | CPGF radius x degree grid | 8 |
 | wall-clock / backend | 1 representative | clean + 10 dB | both execution paths | timing reps |
 | real-image edges | BSDS500 images | - | gradient magnitude + threshold sweep | - |
+
+The repository also retains the Parquet measurements from the CPGF radius--degree
+study as archived data. Those files are public data only; the code that constructs
+the CPGF operator and regenerates that study is not included.
 
 ## Quickstart
 
@@ -100,7 +104,8 @@ agfb-filters/      gradient filters and execution paths
 agfb-metrics/      gradient-field and edge-detection metrics
 agfb-bench/        benchmark runner and CLI
 runs/              raw measurements (Parquet shards) and analysis scripts
-  synthetic/       clean_accuracy, awgn_robustness, noise_breadth, cpgf_grid
+  synthetic/       clean_accuracy, awgn_robustness, noise_breadth
+                   cpgf_grid (archived measurements only)
   realimg/         edges, supersampled
   timing/          backend_timing, walltime_scaling
   _analysis/       scripts that reduce shards into the paper's tables
@@ -118,6 +123,7 @@ from them.
 |---|---|---|
 | Clean headline table | `runs/synthetic/clean_accuracy/` and `runs/_analysis/analyze_appendix.py` | 110 filters over 559 unique generator cells. |
 | AWGN ladder | `runs/synthetic/awgn_robustness/` and `runs/_analysis/analyze_awgn*.py` | 110 filters over 559 unique generator cells at each SNR. |
+| CPGF radius--degree study | `runs/synthetic/cpgf_grid/` and `runs/_analysis/analyze*_appendix.py` | Archived Parquet measurements; the CPGF implementation is not included. |
 | Real-image table | `runs/realimg/edges/` and `runs/_analysis/analyze_appendix.py` | 182 successful runs, reported as 136 nonredundant rows. |
 | Supersampling figure and tables | `runs/realimg/supersampled/` and `runs/_analysis/analyze_appendix.py` | 174 successful runs, reported as 128 nonredundant matched rows. |
 | Supplement tables | `runs/_analysis/analyze_appendix.py` and `runs/_analysis/analyze_awgn_appendix.py` | Display-ready CSV tables are generated without manual transcription. |
@@ -128,12 +134,14 @@ The reproducibility workflow is documented in [`REPRODUCIBILITY.md`](REPRODUCIBI
 It describes the smoke checks, the production studies, the analysis scripts, and
 the external real-image inputs required for the edge studies.
 
-The source code, benchmark configuration, analysis scripts, notebooks, and stored
-measurements in this repository are released under the MIT License. The repository
-does not redistribute BSDS500, DRIVE, or BBBC039 image files or annotations. Users
-must obtain those datasets from their respective providers and follow their
-licenses and access conditions before running the real-image studies. The Parquet
-files stored here contain benchmark measurements rather than the source images.
+The public benchmark source code, configuration, analysis scripts, notebooks, and
+stored measurements in this repository are released under the MIT License. The
+CPGF implementation is excluded from the public source release, although its
+benchmark measurements remain available as data. The repository does not
+redistribute BSDS500, DRIVE, or BBBC039 image files or annotations. Users must
+obtain those datasets from their respective providers and follow their licenses
+and access conditions before running the real-image studies. The Parquet files
+stored here contain benchmark measurements rather than the source images.
 
 ## License
 

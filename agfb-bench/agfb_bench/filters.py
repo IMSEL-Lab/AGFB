@@ -1,9 +1,9 @@
 """Filter grid.
 
 A :class:`FilterConfig` is one ``agfb-filters`` family with one parameter
-dictionary on one :class:`ExecutionPath`. CPGF and square Savitzky-Golay are
-swept densely (the support-size methods the paper is about); the rest are
-baselines. Underdetermined polynomial cells (a 2-D degree ``d`` needs
+dictionary on one :class:`ExecutionPath`. Square Savitzky-Golay is swept
+dense over its support sizes; the other filters are baselines.
+Underdetermined polynomial cells (a 2-D degree ``d`` needs
 ``(d+1)(d+2)/2`` samples <= support) are skipped at construction: the library
 raises ``ValueError`` for them, which :func:`build_filter_configs` catches.
 
@@ -54,11 +54,6 @@ _FIXED_BASELINES = (
 )
 
 
-def _cpgf_path(radius: int) -> str:
-    """CPGF path is selected by support size: sparse offsets <=8 px, FFT >=9 px."""
-    return "SPARSE_OFFSETS" if radius <= 8 else "FFT"
-
-
 def _try_build(family: str, path: str, **params) -> FilterConfig | None:
     """Return a config, or ``None`` if the library rejects it as underdetermined."""
     import agfb_filters as filters
@@ -78,11 +73,9 @@ def _try_build(family: str, path: str, **params) -> FilterConfig | None:
 def build_filter_configs(profile: str = "full") -> list[FilterConfig]:
     """Build the filter configs for a profile.
 
-    Profiles: ``headline`` | ``core`` | ``full`` | ``cpgf_grid``. The
-    ``cpgf_grid`` profile is the CPGF radius x degree matrix only (no
-    baselines), for isolating the operator's own tuning surface across noise.
+    Profiles: ``headline`` | ``core`` | ``full``.
     """
-    if profile not in ("headline", "core", "full", "cpgf_grid"):
+    if profile not in ("headline", "core", "full"):
         raise ValueError(f"unknown filter profile {profile!r}")
 
     configs: list[FilterConfig] = []
@@ -91,23 +84,9 @@ def build_filter_configs(profile: str = "full") -> list[FilterConfig]:
         if config is not None:
             configs.append(config)
 
-    if profile == "cpgf_grid":
-        # CPGF only, swept across degrees 1/3/5/7 so degree x radius x noise is
-        # fully crossed. The radius ladder extends well past the ``core`` study's
-        # top of 45 px (up to 255 px, a 511 px window on the 4096 px field) to
-        # show where added support stops helping or boundary effects take over.
-        # Underdetermined (degree too high for support) combos drop.
-        for radius in (3, 5, 7, 11, 15, 21, 31, 45, 63, 91, 127, 181, 255):
-            for degree in (1, 3, 5, 7):
-                keep(_try_build("cpgf", _cpgf_path(radius), radius=radius, degree=degree))
-        return configs
-
     if profile == "full":
         for family, path in _FIXED_BASELINES:
             keep(FilterConfig(family, {}, path))
-        for radius in (3, 5, 7, 11, 15, 21, 31, 45):
-            for degree in (1, 3, 5, 7):
-                keep(_try_build("cpgf", _cpgf_path(radius), radius=radius, degree=degree))
         for window in (3, 5, 7, 11, 15, 21, 31):
             radius = (window - 1) // 2
             for degree in (1, 3, 5):
@@ -151,7 +130,6 @@ def build_filter_configs(profile: str = "full") -> list[FilterConfig]:
     # -- headline (~15): 11 fixed baselines + 4 representative tuned configs ---
     for family, path in _FIXED_BASELINES:
         keep(FilterConfig(family, {}, path))
-    keep(_try_build("cpgf", _cpgf_path(7), radius=7, degree=3))
     keep(FilterConfig("derivative_of_gaussian", {"sigma": 2.0}, "SEPARABLE"))
     keep(_try_build("savitzky_golay", "SPATIAL_DENSE", radius=3, degree=3))  # square SG h7,d3
     keep(FilterConfig("freeman_adelson_g1", {"sigma": 2.0}, "SEPARABLE"))
@@ -159,10 +137,6 @@ def build_filter_configs(profile: str = "full") -> list[FilterConfig]:
         return configs
 
     # -- core (29): headline + tuned sub-ladders ------------------------------
-    for radius in (3, 5, 7, 11, 15, 21, 31, 45):
-        if radius == 7:
-            continue  # cpgf_r7_d3 already in headline
-        keep(_try_build("cpgf", _cpgf_path(radius), radius=radius, degree=3))
     for sigma in (1, 2, 3, 4, 6):
         if sigma == 2:
             continue  # dog_sigma2 already in headline
@@ -182,8 +156,8 @@ def build_backend_sweep_grid() -> list[FilterConfig]:
     the sweep runner ignores it and forces every compatible
     :class:`ExecutionPath` in turn (discovered by try/except on ``run_filter``).
     The grid is deliberately denser than the ``full`` profile so that each
-    family is sampled across the support sizes / parameters where a backend's
-    cost crosses over (e.g. SPARSE_OFFSETS vs FFT for CPGF as radius grows).
+    family is sampled across the support sizes and parameters where backend
+    cost changes.
     """
     configs: list[FilterConfig] = []
 
@@ -194,12 +168,6 @@ def build_backend_sweep_grid() -> list[FilterConfig]:
     # Fixed FIR baselines: each can be forced onto several dense/sparse paths.
     for family, path in _FIXED_BASELINES:
         keep(FilterConfig(family, {}, path))
-
-    # CPGF: the paper's operator. Sweep radius across the sparse<->FFT crossover
-    # (<=8 px sparse, >=9 px FFT natively) and a fuller degree ladder.
-    for radius in (3, 5, 7, 9, 11, 15, 21, 31, 45, 63):
-        for degree in (1, 2, 3, 4, 5, 6, 7):
-            keep(_try_build("cpgf", _cpgf_path(radius), radius=radius, degree=degree))
 
     # Square Savitzky-Golay: dense polynomial windows.
     for window in (3, 5, 7, 9, 11, 15, 21, 31, 41):

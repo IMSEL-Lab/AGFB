@@ -33,7 +33,6 @@ _FILTER_MODULES = (
     "agfb_filters.filters.roberts",
     "agfb_filters.filters.scharr",
     "agfb_filters.filters.sobel",
-    "agfb_filters.filters.cpgf",
     "agfb_filters.filters.derivative_of_gaussian",
     "agfb_filters.filters.freeman_adelson",
     "agfb_filters.filters.savitzky_golay",

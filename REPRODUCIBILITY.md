@@ -1,8 +1,9 @@
 # Reproducibility
 
 This document describes the smallest checks that validate a clean AGFB checkout
-and the commands used to regenerate the stored benchmark measurements and
-derived tables.
+and the commands used to regenerate the public benchmark measurements and
+derived tables. The archived CPGF measurements are retained as data, but the
+CPGF implementation and its regeneration path are excluded from this checkout.
 
 ## Environment
 
@@ -48,6 +49,9 @@ uv run agfb-bench run --study clean_accuracy --image-size 96 \
 The Parquet shards under `runs/` are the measurements used by the reviewer
 notebook and the analysis scripts. They are intentionally retained because they
 allow headline values to be recomputed without rerunning the largest GPU jobs.
+This includes `runs/synthetic/cpgf_grid/`, which is public data only; the source
+implementation of CPGF is not part of the release and that study cannot be
+regenerated from this checkout.
 The analysis scripts write derived CSV files to `runs/_analysis/generated/` by
 default, keeping the public checkout independent of any neighboring manuscript
 repository.

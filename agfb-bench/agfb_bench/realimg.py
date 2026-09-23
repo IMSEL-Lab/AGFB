@@ -17,7 +17,7 @@ Two edge-extraction modes are compared head to head:
 ``nms``
     Oriented non-maximum suppression first, thinning ridges to one-pixel lines
     using the same ``(gx, gy)`` the filter returns, then threshold. Rewards
-    localisation, which is where sharp operators (CPGF, DoG) should separate
+    localisation, which is where sharp operators such as DoG should separate
     from box / heavily-smoothing filters.
 
 Datasets (no synthetic noise is injected; the images are scored as shipped):

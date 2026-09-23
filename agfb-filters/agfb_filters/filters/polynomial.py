@@ -11,7 +11,7 @@ def build_polynomial_gradient_kernels(
     radius: int,
     degree: int,
     *,
-    support: Literal["disc", "square"],
+    support: Literal["square"],
     device: torch.device | None = None,
 ) -> tuple[torch.Tensor, torch.Tensor]:
     """Build horizontal and vertical least-squares gradient kernels."""
@@ -29,12 +29,10 @@ def build_polynomial_gradient_kernels(
     )
     row_grid, column_grid = torch.meshgrid(offset_values, offset_values, indexing="ij")
 
-    if support == "disc":
-        support_mask = row_grid.square() + column_grid.square() <= radius * radius
-    elif support == "square":
+    if support == "square":
         support_mask = torch.ones_like(row_grid, dtype=torch.bool)
     else:
-        raise ValueError(f"support must be 'disc' or 'square', got {support!r}")
+        raise ValueError(f"support must be 'square', got {support!r}")
 
     row_offsets = row_grid[support_mask]
     column_offsets = column_grid[support_mask]

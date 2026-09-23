@@ -143,9 +143,9 @@ def build_parser() -> argparse.ArgumentParser:
         "--study",
         required=True,
         help=(
-            "clean_accuracy | awgn_robustness | noise_breadth | cpgf_grid | "
+            "clean_accuracy | awgn_robustness | noise_breadth | "
             "walltime_scaling | backend_timing | edges | supersampled "
-            "(legacy A/B/C/CG/D/E/R/R_ss also accepted)"
+            "(legacy A/B/C/D/E/R/R_ss also accepted)"
         ),
     )
     run.add_argument("--seeds", default=None, help="comma-separated seeds (default: study default)")

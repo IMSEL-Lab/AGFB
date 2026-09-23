@@ -74,7 +74,6 @@ STUDY_ALIASES = {
     "a": "clean_accuracy",
     "b": "awgn_robustness",
     "c": "noise_breadth",
-    "cg": "cpgf_grid",
     "d": "walltime_scaling",
     "e": "backend_timing",
     "r": "edges",
@@ -108,14 +107,10 @@ def build_study(
         conditions = noisy_awgn_conditions()
         filters = build_filter_configs(filter_profile or "full")
         default_seeds = PRODUCTION_SEEDS
-    elif name in ("noise_breadth", "cpgf_grid"):
-        # cpgf_grid is the CPGF degree-sweep variant of noise_breadth: identical
-        # native-noise recipe (canonical subset x native conditions), but the
-        # CPGF radius x degree grid instead of the core baseline set.
+    elif name == "noise_breadth":
         cells = build_canonical_subset()
         conditions = native_conditions()
-        default_profile = "cpgf_grid" if name == "cpgf_grid" else "core"
-        filters = build_filter_configs(filter_profile or default_profile)
+        filters = build_filter_configs(filter_profile or "core")
         default_seeds = PRODUCTION_SEEDS
     else:
         raise ValueError(
